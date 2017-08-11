@@ -8,5 +8,4 @@ SampleModule.prototype.foo = function() {
     return "foo";
 };
 
-
 module.exports = SampleModule;
