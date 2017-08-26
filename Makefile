@@ -33,7 +33,7 @@ clean:
 	mkdir -p .build && touch $@
 
 .build/install: .build/build package.json
-	yarn install && touch $@
+	npm install && touch $@
 
 TEST_PATH="tests"
 TEST_FILES=$(shell test -d $(TEST_PATH) && find $(TEST_PATH) -type f -name "*.js")
