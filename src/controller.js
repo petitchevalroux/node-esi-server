@@ -15,6 +15,13 @@ class EsiController {
                         self.templateProvider.get
                             .apply(self.templateProvider, query.tpl)
                     ];
+                    if (typeof(query.data) !== "undefined") {
+                        promises.push(
+                            self.dataProvider.get.apply(
+                                self.dataProvider, query.data
+                            )
+                        );
+                    }
                     return Promise.all(promises);
                 } catch (err) {
                     throw self.getError("Invalid parameters", 400);
