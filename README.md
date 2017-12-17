@@ -7,6 +7,10 @@ Supported template providers:
 
  * [nunjucks](https://github.com/petitchevalroux/node-esi-server-template-nunjucks)
 
+Supported data providers:
+
+ * [koa-router](https://github.com/petitchevalroux/node-esi-server-data-koa-router)
+
 ## Install
 ```
 npm install --save esi-server
@@ -14,15 +18,29 @@ npm install --save esi-server
 
 ## Usage
 
-### Using the nunjucks template provider
+### Using the nunjucks template provider and koa-router data provider
 
 ```javascript
 const TemplateProvider = require("esi-server-template-nunjucks"),
-    nunjucks = TemplateProvider.nunjucks,
     {Server} = require("esi-server"),
-    templateProvider = new TemplateProvider();
+    templateProvider = new TemplateProvider(),
+    DataProvider = require("esi-server-data-koa-router")
+    dataProvider = new DataProvider(),
+    router = dataProvider.getRouter();
+router.get("/articles/:id", ctx => {
+    return new Promise(resolve => {
+        resolve(Object.assign(
+            {
+                title: "My article",
+                body: "My body"
+            },
+            {id: ctx.params.id}
+        ));
+    });
+});
 app = new Server({
-    templateProvider: templateProvider
+    templateProvider: templateProvider,
+    dataProvider: dataProvider
 });
 // Listen request from port 3000 TCP port
 app.listen(3000);
