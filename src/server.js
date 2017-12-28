@@ -1,11 +1,16 @@
 "use strict";
 const Koa = require("koa"),
     path = require("path"),
-    middleware = require(path.join(__dirname, "middleware"));
+    esiMiddleware = require(path.join(__dirname, "middleware"));
 class EsiServer extends Koa {
     constructor(options) {
         super();
-        this.use(middleware(options));
+        if (Array.isArray(options.middlewares)) {
+            options.middlewares.forEach(middleware => {
+                this.use(middleware);
+            });
+        }
+        this.use(esiMiddleware(options));
     }
 }
 

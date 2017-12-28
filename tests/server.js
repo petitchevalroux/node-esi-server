@@ -17,7 +17,21 @@ describe("Server", () => {
     before(() => {
         httpServer = new Server({
             templateProvider: templateProvider,
-            dataProvider: dataProvider
+            dataProvider: dataProvider,
+            middlewares: [
+                (ctx, next) => {
+                    return next()
+                        .catch(err => {
+                            ctx.response.type =
+                                    "text";
+                            ctx.response.status =
+                                    err.status ||
+                                    500;
+                            ctx.response.body =
+                                    err.message;
+                        });
+                }
+            ]
         })
             .listen();
         request = supertest(httpServer);

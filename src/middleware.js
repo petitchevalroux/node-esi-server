@@ -16,11 +16,6 @@ module.exports = (options) => {
                 ctx.response.status = 200;
                 ctx.response.body = content;
                 return ctx;
-            })
-            .catch(err => {
-                ctx.response.type = "text";
-                ctx.response.status = err.status || 500;
-                ctx.response.body = err.message;
             });
     };
 };
