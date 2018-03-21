@@ -28,16 +28,15 @@ const TemplateProvider = require("esi-server-template-nunjucks"),
     dataProvider = new DataProvider(),
     router = dataProvider.getRouter();
 router.get("/articles/:id", ctx => {
-    return new Promise(resolve => {
-        resolve(Object.assign(
-            {
-                title: "My article",
-                body: "My body"
-            },
-            {id: ctx.params.id}
-        ));
-    });
+    ctx.body = Object.assign(
+        {
+            title: "My article",
+            body: "My body"
+        },
+        {id: ctx.params.id}
+    );
 });
+
 app = new Server({
     templateProvider: templateProvider,
     dataProvider: dataProvider
