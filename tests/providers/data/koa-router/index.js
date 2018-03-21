@@ -13,14 +13,11 @@ const DataProvider = require("esi-server-data-koa-router"),
     Promise = require("bluebird");
 
 router.get("/articles/:id", ctx => {
-    return new Promise(resolve => {
-        resolve(
-            Object.assign({
-                title: "My article",
-                body: "My body"
-            }, {
-                id: ctx.params.id
-            }));
+    ctx.body = Object.assign({
+        title: "My article",
+        body: "My body"
+    }, {
+        id: ctx.params.id
     });
 });
 
@@ -41,14 +38,15 @@ describe("koa-router data provider", () => {
     describe("article", () => {
         let templateProviderGetStub;
         beforeEach(() => {
-            templateProviderGetStub = new sinon.stub(
-                templateProvider, "get");
-            templateProviderGetStub.withArgs(
-                "article.html")
+            templateProviderGetStub = new sinon
+                .stub(templateProvider, "get");
+            templateProviderGetStub
+                .withArgs("article.html")
                 .returns({
                     render: (data) => {
-                        return JSON.stringify(
-                            data);
+                        return Promise.resolve(
+                            JSON.stringify(
+                                data));
                     }
                 });
         });
@@ -60,15 +58,18 @@ describe("koa-router data provider", () => {
                 .get(
                     "/fragment?{\"data\":[\"/articles/1\"],\"tpl\":[\"article.html\"]}"
                 )
-                .expect("Content-Type",
-                    "text/html; charset=utf-8");
+                .expect(
+                    "Content-Type",
+                    "text/html; charset=utf-8"
+                );
         });
         it("respond with parsed article", () => {
             return request
                 .get(
                     "/fragment?{\"data\":[\"/articles/1\"],\"tpl\":[\"article.html\"]}"
                 )
-                .expect(200,
+                .expect(
+                    200,
                     "{\"title\":\"My article\",\"body\":\"My body\",\"id\":\"1\"}"
                 );
         });
